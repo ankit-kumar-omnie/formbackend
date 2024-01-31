@@ -1,25 +1,34 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { SleepQuestion } from "./schema/sleepquestion.schema";
-import { Model } from "mongoose";
-import { CreateFormDto } from "./dto/createform.dto";
+import { forms } from "./schema/sleepquestion.schema";
+import mongoose, { Model } from "mongoose";
+import { formData } from "./schema/formdataschema";
 
 @Injectable()
 export class SleepQuestionService {
   constructor(
-    @InjectModel(SleepQuestion.name)
-    private sleepquestionModel: Model<SleepQuestion>
+    @InjectModel(forms.name)
+    private sleepquestionModel: Model<forms>,
+    @InjectModel(formData.name) private formDatamodel: Model<formData>
   ) {}
 
-  async createform(createform: CreateFormDto): Promise<SleepQuestion> {
-    const formcreation = await this.sleepquestionModel.create(createform);
-    if (!formcreation) {
+  async updateform(id: string, createform: any): Promise<any> {
+    const updateform = await this.formDatamodel.findOneAndUpdate(
+      { id },
+      { $set: { data: createform } },
+      { new: true }
+    );
+    if (!updateform) {
       throw new BadRequestException(`Invalid Details`);
     }
-    return formcreation;
+    return updateform;
   }
 
-  async getallform(): Promise<SleepQuestion[]> {
-    return await this.sleepquestionModel.find();
+  async getformdatabyid(id: string) {
+    return await this.formDatamodel.findOne({ id });
+  }
+
+  async getbyid(id: string) {
+    return await this.sleepquestionModel.findOne({ id });
   }
 }

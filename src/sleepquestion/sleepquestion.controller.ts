@@ -1,22 +1,37 @@
-import { Body, Controller, HttpException, Post, Get } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  HttpException,
+  Get,
+  Param,
+  Put,
+  HttpCode,
+} from "@nestjs/common";
 import { SleepQuestionService } from "./sleepquestion.service";
-import { CreateFormDto } from "./dto/createform.dto";
 
 @Controller("sleepquestion")
 export class SleepQuestionController {
   constructor(private sleepService: SleepQuestionService) {}
 
-  @Post("create")
-  async createform(@Body() createformDto: CreateFormDto) {
+  @HttpCode(201)
+  @Put(":id")
+  async updateform(@Param("id") id: string, @Body() createformDto: any) {
     try {
-      return await this.sleepService.createform(createformDto);
+      return await this.sleepService.updateform(id, createformDto);
     } catch (error) {
       throw new HttpException(error.message, error.statuscode ?? 400);
     }
   }
 
-  @Get()
-  async getallforms() {
-    return await this.sleepService.getallform();
+  @HttpCode(200)
+  @Get("formdata/:id")
+  async getformdata(@Param("id") id: string) {
+    return await this.sleepService.getformdatabyid(id);
+  }
+
+  @HttpCode(200)
+  @Get(":id")
+  async getbyid(@Param("id") id: string) {
+    return await this.sleepService.getbyid(id);
   }
 }
