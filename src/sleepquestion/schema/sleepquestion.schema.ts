@@ -1,10 +1,9 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose from "mongoose";
 
 @Schema()
 class LabelValues {
   @Prop()
-  id: mongoose.Types.ObjectId;
+  id: string;
 
   @Prop()
   label: string;
@@ -14,9 +13,9 @@ class LabelValues {
 }
 
 @Schema({ timestamps: true })
-export class SleepQuestion {
+export class forms {
   @Prop()
-  id: mongoose.Types.ObjectId;
+  id: string;
 
   @Prop()
   label: string;
@@ -30,4 +29,4 @@ export class SleepQuestion {
   ];
 }
 
-export const SleepQuestionSchema = SchemaFactory.createForClass(SleepQuestion);
+export const SleepQuestionSchema = SchemaFactory.createForClass(forms);
