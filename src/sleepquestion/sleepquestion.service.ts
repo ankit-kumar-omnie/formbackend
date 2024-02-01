@@ -16,7 +16,7 @@ export class SleepQuestionService {
     const updateform = await this.formDatamodel.findOneAndUpdate(
       { id },
       { $set: { data: createform } },
-      { new: true }
+      { new: true, upsert: true }
     );
     if (!updateform) {
       throw new BadRequestException(`Invalid Details`);
@@ -25,10 +25,22 @@ export class SleepQuestionService {
   }
 
   async getformdatabyid(id: string) {
-    return await this.formDatamodel.findOne({ id });
+    const res = await this.formDatamodel.findOne({ id });
+    if (!res) {
+      throw new BadRequestException("Invalid Id");
+    }
+    return res;
   }
 
   async getbyid(id: string) {
     return await this.sleepquestionModel.findOne({ id });
+  }
+
+  async createform(dto: any) {
+    const res = await this.formDatamodel.create(dto);
+    if (!res) {
+      throw new BadRequestException("Error");
+    }
+    return res;
   }
 }
