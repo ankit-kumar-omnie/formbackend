@@ -6,6 +6,8 @@ import {
   Param,
   Put,
   HttpCode,
+  BadRequestException,
+  Post,
 } from "@nestjs/common";
 import { SleepQuestionService } from "./sleepquestion.service";
 
@@ -26,12 +28,22 @@ export class SleepQuestionController {
   @HttpCode(200)
   @Get("formdata/:id")
   async getformdata(@Param("id") id: string) {
-    return await this.sleepService.getformdatabyid(id);
+    try {
+      return await this.sleepService.getformdatabyid(id);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   @HttpCode(200)
   @Get(":id")
   async getbyid(@Param("id") id: string) {
     return await this.sleepService.getbyid(id);
+  }
+
+  @HttpCode(201)
+  @Post()
+  async createform(@Body() dto: any) {
+    return await this.sleepService.createform(dto);
   }
 }
